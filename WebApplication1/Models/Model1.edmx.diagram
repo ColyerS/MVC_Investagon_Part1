@@ -5,8 +5,6 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="3cb1de24e4a24250b0514d72fa597f21" Name="Diagram1">
-        <EntityTypeShape EntityType="FinanceSiteModel.Company" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="FinanceSiteModel.Equity" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="FinanceSiteModel.Lifestyle" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FinanceSiteModel.LifestylePortfolio" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FinanceSiteModel.PortfolioStock" Width="1.5" PointX="2.75" PointY="5.75" IsExpanded="true" />
