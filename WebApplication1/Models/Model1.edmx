@@ -1,0 +1,380 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FinanceSiteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Companies">
+          <Key>
+            <PropertyRef Name="symbol" />
+          </Key>
+          <Property Name="symbol" Type="nvarchar" MaxLength="450" Nullable="false" />
+          <Property Name="date" Type="nvarchar(max)" />
+          <Property Name="iexId" Type="nvarchar(max)" />
+          <Property Name="isEnabled" Type="bit" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" />
+          <Property Name="type" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Equities">
+          <Key>
+            <PropertyRef Name="EquityId" />
+          </Key>
+          <Property Name="EquityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="change" Type="real" Nullable="false" />
+          <Property Name="changeOverTime" Type="real" Nullable="false" />
+          <Property Name="changePercent" Type="real" Nullable="false" />
+          <Property Name="close" Type="real" Nullable="false" />
+          <Property Name="date" Type="nvarchar(max)" />
+          <Property Name="high" Type="real" Nullable="false" />
+          <Property Name="label" Type="nvarchar(max)" />
+          <Property Name="low" Type="real" Nullable="false" />
+          <Property Name="open" Type="real" Nullable="false" />
+          <Property Name="symbol" Type="nvarchar" MaxLength="450" />
+          <Property Name="unadjustedVolume" Type="int" Nullable="false" />
+          <Property Name="volume" Type="int" Nullable="false" />
+          <Property Name="vwap" Type="real" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Lifestyle">
+          <Key>
+            <PropertyRef Name="lifestyleId" />
+          </Key>
+          <Property Name="lifestyleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="lifestyleName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="lifestyleDescription" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LifestylePortfolio">
+          <Key>
+            <PropertyRef Name="portfolioId" />
+          </Key>
+          <Property Name="portfolioId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="lifestyleId" Type="int" Nullable="false" />
+          <Property Name="portfolioName" Type="nvarchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PortfolioStocks">
+          <Key>
+            <PropertyRef Name="portfolioStockId" />
+          </Key>
+          <Property Name="portfolioStockId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="portfolioName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="stockSymbol" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="stockName" Type="nvarchar" MaxLength="500" />
+          <Property Name="percent" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="currentPrice" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="Profile">
+          <Key>
+            <PropertyRef Name="profileId" />
+          </Key>
+          <Property Name="profileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="firstName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="lastName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="gender" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="lifestyle" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StockHistory">
+          <Key>
+            <PropertyRef Name="stockId" />
+          </Key>
+          <Property Name="stockId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="stockSymbol" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="stockDate" Type="date" Nullable="false" />
+          <Property Name="stockPrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserStocks">
+          <Key>
+            <PropertyRef Name="userStockId" />
+          </Key>
+          <Property Name="userStockId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="portfolioStockId" Type="int" />
+          <Property Name="profileId" Type="int" Nullable="false" />
+          <Property Name="stockSymbol" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="stockName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="percent" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="purchasePrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="purchaseDate" Type="datetime" Nullable="false" />
+          <Property Name="purchaseQty" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="soldPrice" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <Association Name="FK_Equities_Companies_symbol">
+          <End Role="Companies" Type="Self.Companies" Multiplicity="0..1" />
+          <End Role="Equities" Type="Self.Equities" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Companies">
+              <PropertyRef Name="symbol" />
+            </Principal>
+            <Dependent Role="Equities">
+              <PropertyRef Name="symbol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FinanceSiteModelStoreContainer">
+          <EntitySet Name="Companies" EntityType="Self.Companies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Equities" EntityType="Self.Equities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lifestyle" EntityType="Self.Lifestyle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LifestylePortfolio" EntityType="Self.LifestylePortfolio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PortfolioStocks" EntityType="Self.PortfolioStocks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Profile" EntityType="Self.Profile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StockHistory" EntityType="Self.StockHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserStocks" EntityType="Self.UserStocks" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Equities_Companies_symbol" Association="Self.FK_Equities_Companies_symbol">
+            <End Role="Companies" EntitySet="Companies" />
+            <End Role="Equities" EntitySet="Equities" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FinanceSiteModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="symbol" />
+          </Key>
+          <Property Name="symbol" Type="String" MaxLength="450" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="date" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="iexId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="isEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Equities" Relationship="Self.FK_Equities_Companies_symbol" FromRole="Companies" ToRole="Equities" />
+        </EntityType>
+        <EntityType Name="Equity">
+          <Key>
+            <PropertyRef Name="EquityId" />
+          </Key>
+          <Property Name="EquityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="change" Type="Single" Nullable="false" />
+          <Property Name="changeOverTime" Type="Single" Nullable="false" />
+          <Property Name="changePercent" Type="Single" Nullable="false" />
+          <Property Name="close" Type="Single" Nullable="false" />
+          <Property Name="date" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="high" Type="Single" Nullable="false" />
+          <Property Name="label" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="low" Type="Single" Nullable="false" />
+          <Property Name="open" Type="Single" Nullable="false" />
+          <Property Name="symbol" Type="String" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="unadjustedVolume" Type="Int32" Nullable="false" />
+          <Property Name="volume" Type="Int32" Nullable="false" />
+          <Property Name="vwap" Type="Single" Nullable="false" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_Equities_Companies_symbol" FromRole="Equities" ToRole="Companies" />
+        </EntityType>
+        <EntityType Name="Lifestyle">
+          <Key>
+            <PropertyRef Name="lifestyleId" />
+          </Key>
+          <Property Name="lifestyleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="lifestyleName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lifestyleDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LifestylePortfolio">
+          <Key>
+            <PropertyRef Name="portfolioId" />
+          </Key>
+          <Property Name="portfolioId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="lifestyleId" Type="Int32" Nullable="false" />
+          <Property Name="portfolioName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PortfolioStock">
+          <Key>
+            <PropertyRef Name="portfolioStockId" />
+          </Key>
+          <Property Name="portfolioStockId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="portfolioName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="stockSymbol" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="stockName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="percent" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="currentPrice" Type="Decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="Profile">
+          <Key>
+            <PropertyRef Name="profileId" />
+          </Key>
+          <Property Name="profileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="firstName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lastName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="gender" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lifestyle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StockHistory">
+          <Key>
+            <PropertyRef Name="stockId" />
+          </Key>
+          <Property Name="stockId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="stockSymbol" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="stockDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="stockPrice" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserStock">
+          <Key>
+            <PropertyRef Name="userStockId" />
+          </Key>
+          <Property Name="userStockId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="portfolioStockId" Type="Int32" />
+          <Property Name="profileId" Type="Int32" Nullable="false" />
+          <Property Name="stockSymbol" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="stockName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="percent" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="purchasePrice" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="purchaseDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="purchaseQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="soldPrice" Type="Decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <Association Name="FK_Equities_Companies_symbol">
+          <End Role="Companies" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="Equities" Type="Self.Equity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Companies">
+              <PropertyRef Name="symbol" />
+            </Principal>
+            <Dependent Role="Equities">
+              <PropertyRef Name="symbol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FinanceSiteEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Companies" EntityType="Self.Company" />
+          <EntitySet Name="Equities" EntityType="Self.Equity" />
+          <EntitySet Name="Lifestyles" EntityType="Self.Lifestyle" />
+          <EntitySet Name="LifestylePortfolios" EntityType="Self.LifestylePortfolio" />
+          <EntitySet Name="PortfolioStocks" EntityType="Self.PortfolioStock" />
+          <EntitySet Name="Profiles" EntityType="Self.Profile" />
+          <EntitySet Name="StockHistories" EntityType="Self.StockHistory" />
+          <EntitySet Name="UserStocks" EntityType="Self.UserStock" />
+          <AssociationSet Name="FK_Equities_Companies_symbol" Association="Self.FK_Equities_Companies_symbol">
+            <End Role="Companies" EntitySet="Companies" />
+            <End Role="Equities" EntitySet="Equities" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FinanceSiteModelStoreContainer" CdmEntityContainer="FinanceSiteEntities">
+          <EntitySetMapping Name="Companies">
+            <EntityTypeMapping TypeName="FinanceSiteModel.Company">
+              <MappingFragment StoreEntitySet="Companies">
+                <ScalarProperty Name="symbol" ColumnName="symbol" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="iexId" ColumnName="iexId" />
+                <ScalarProperty Name="isEnabled" ColumnName="isEnabled" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Equities">
+            <EntityTypeMapping TypeName="FinanceSiteModel.Equity">
+              <MappingFragment StoreEntitySet="Equities">
+                <ScalarProperty Name="EquityId" ColumnName="EquityId" />
+                <ScalarProperty Name="change" ColumnName="change" />
+                <ScalarProperty Name="changeOverTime" ColumnName="changeOverTime" />
+                <ScalarProperty Name="changePercent" ColumnName="changePercent" />
+                <ScalarProperty Name="close" ColumnName="close" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="high" ColumnName="high" />
+                <ScalarProperty Name="label" ColumnName="label" />
+                <ScalarProperty Name="low" ColumnName="low" />
+                <ScalarProperty Name="open" ColumnName="open" />
+                <ScalarProperty Name="symbol" ColumnName="symbol" />
+                <ScalarProperty Name="unadjustedVolume" ColumnName="unadjustedVolume" />
+                <ScalarProperty Name="volume" ColumnName="volume" />
+                <ScalarProperty Name="vwap" ColumnName="vwap" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lifestyles">
+            <EntityTypeMapping TypeName="FinanceSiteModel.Lifestyle">
+              <MappingFragment StoreEntitySet="Lifestyle">
+                <ScalarProperty Name="lifestyleId" ColumnName="lifestyleId" />
+                <ScalarProperty Name="lifestyleName" ColumnName="lifestyleName" />
+                <ScalarProperty Name="lifestyleDescription" ColumnName="lifestyleDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LifestylePortfolios">
+            <EntityTypeMapping TypeName="FinanceSiteModel.LifestylePortfolio">
+              <MappingFragment StoreEntitySet="LifestylePortfolio">
+                <ScalarProperty Name="portfolioId" ColumnName="portfolioId" />
+                <ScalarProperty Name="lifestyleId" ColumnName="lifestyleId" />
+                <ScalarProperty Name="portfolioName" ColumnName="portfolioName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PortfolioStocks">
+            <EntityTypeMapping TypeName="FinanceSiteModel.PortfolioStock">
+              <MappingFragment StoreEntitySet="PortfolioStocks">
+                <ScalarProperty Name="portfolioStockId" ColumnName="portfolioStockId" />
+                <ScalarProperty Name="portfolioName" ColumnName="portfolioName" />
+                <ScalarProperty Name="stockSymbol" ColumnName="stockSymbol" />
+                <ScalarProperty Name="stockName" ColumnName="stockName" />
+                <ScalarProperty Name="percent" ColumnName="percent" />
+                <ScalarProperty Name="currentPrice" ColumnName="currentPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Profiles">
+            <EntityTypeMapping TypeName="FinanceSiteModel.Profile">
+              <MappingFragment StoreEntitySet="Profile">
+                <ScalarProperty Name="profileId" ColumnName="profileId" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="lifestyle" ColumnName="lifestyle" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StockHistories">
+            <EntityTypeMapping TypeName="FinanceSiteModel.StockHistory">
+              <MappingFragment StoreEntitySet="StockHistory">
+                <ScalarProperty Name="stockId" ColumnName="stockId" />
+                <ScalarProperty Name="stockSymbol" ColumnName="stockSymbol" />
+                <ScalarProperty Name="stockDate" ColumnName="stockDate" />
+                <ScalarProperty Name="stockPrice" ColumnName="stockPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserStocks">
+            <EntityTypeMapping TypeName="FinanceSiteModel.UserStock">
+              <MappingFragment StoreEntitySet="UserStocks">
+                <ScalarProperty Name="userStockId" ColumnName="userStockId" />
+                <ScalarProperty Name="portfolioStockId" ColumnName="portfolioStockId" />
+                <ScalarProperty Name="profileId" ColumnName="profileId" />
+                <ScalarProperty Name="stockSymbol" ColumnName="stockSymbol" />
+                <ScalarProperty Name="stockName" ColumnName="stockName" />
+                <ScalarProperty Name="percent" ColumnName="percent" />
+                <ScalarProperty Name="purchasePrice" ColumnName="purchasePrice" />
+                <ScalarProperty Name="purchaseDate" ColumnName="purchaseDate" />
+                <ScalarProperty Name="purchaseQty" ColumnName="purchaseQty" />
+                <ScalarProperty Name="soldPrice" ColumnName="soldPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
