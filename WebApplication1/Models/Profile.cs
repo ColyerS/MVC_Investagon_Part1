@@ -20,5 +20,6 @@ namespace WebApplication1.Models
         public string lastName { get; set; }
         public string gender { get; set; }
         public string lifestyle { get; set; }
+        public string userName { get; set; }
     }
 }

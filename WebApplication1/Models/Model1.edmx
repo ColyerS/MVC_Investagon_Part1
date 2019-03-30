@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="FinanceSiteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="FinanceSiteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Companies">
           <Key>
             <PropertyRef Name="symbol" />
@@ -72,6 +72,7 @@
           <Property Name="lastName" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="gender" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="lifestyle" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="userName" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="StockHistory">
           <Key>
@@ -123,8 +124,7 @@
             <End Role="Equities" EntitySet="Equities" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="FinanceSiteModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -197,6 +197,7 @@
           <Property Name="lastName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="gender" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="lifestyle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="userName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="StockHistory">
           <Key>
@@ -319,6 +320,7 @@
           <EntitySetMapping Name="Profiles">
             <EntityTypeMapping TypeName="FinanceSiteModel.Profile">
               <MappingFragment StoreEntitySet="Profile">
+                <ScalarProperty Name="userName" ColumnName="userName" />
                 <ScalarProperty Name="profileId" ColumnName="profileId" />
                 <ScalarProperty Name="password" ColumnName="password" />
                 <ScalarProperty Name="firstName" ColumnName="firstName" />

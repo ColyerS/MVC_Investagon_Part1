@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+@model WebApplication1.Models.Profile
+
+<body>
+
+    <div class="well" style="background-color: gray">
+        @using (Html.BeginForm())
+        {
+
+            <div class="form-group centerlook">
+                <h1> Login </h1>
+            </div>
+            <div class="input-group-lg">
+                <label>User Name: </label>
+                <br />
+                @Html.EditorFor(model => model.userName, new { @class = "form-control", placeholder = "Username" })*
+                @Html.ValidationMessageFor(model => model.userName)
+            </div>
+            <br />
+            <div class="input-group">
+                <label>Password:</label>
+                <br />
+
+                @Html.PasswordFor(model => model.password, new { @class = "form-control", placeholder = "Password" })
+                @Html.ValidationMessageFor(model => model.password)
+
+            </div>
+
+            <div class="form-group error">
+                @if (@ViewBag.Failedcount != null)
+                {
+                    <label> Failed Attempt count is: @ViewBag.Failedcount</label>
+                }
+                @if (@ViewBag.NotValidUser != null)
+                {
+                    <label> @ViewBag.NotValidUser</label>
+                }
+            </div>
+            <div class="loginbtn">
+                <input type="submit" value="Login" class="btn btn-primary" />
+            </div>
+
+        }
+</body>
+
