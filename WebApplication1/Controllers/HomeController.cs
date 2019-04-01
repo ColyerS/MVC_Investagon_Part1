@@ -36,10 +36,14 @@ namespace WebApplication1.Controllers
 
         public ActionResult SignUp()
         {
-            dynamic mymodel = new ExpandoObject();
-            mymodel.Lifestyle = db.Lifestyles.ToList();
-            //mymodel.Students = GetStudents();
-            return View(mymodel);
+            Profile profile = new Profile();
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult SignUp(Profile profile)
+        {
+            return View(profile);
         }
 
         //public List<Lifestyle> GetLifestyles()
@@ -54,21 +58,21 @@ namespace WebApplication1.Controllers
         //}
 
         //test create record in Profile table
-        public ActionResult createProfile()
-        {
-            Profile profile = new Profile();
-            profile.userName = "csigety";
-            profile.password = "nothing";
-            profile.gender = "f";
-            profile.firstName = "Colyer";
-            profile.lastName = "Sigety";
-            profile.lifestyle = "binger";
+        //public ActionResult createProfile()
+        //{
+        //    Profile profile = new Profile();
+        //    profile.userName = "csigety";
+        //    profile.password = "nothing";
+        //    profile.gender = "f";
+        //    profile.firstName = "Colyer";
+        //    profile.lastName = "Sigety";
+        //    profile.lifestyle = "binger";
 
-            db.Profiles.Add(profile);
-            db.SaveChanges();
+        //    db.Profiles.Add(profile);
+        //    db.SaveChanges();
 
-            return View();
-        }
+        //    return View();
+        //}
 
         public ActionResult Login()
         {

@@ -1,41 +1,75 @@
-﻿
-@using WebApplication1.Models;
+﻿@using WebApplication1.Models;
 @{
     ViewData["Title"] = "SignUp";
 }
 
-@model dynamic
+@model WebApplication1.Models.Profile
+
 
 <body>
-    <h1> Tell us about yourself</h1>
+    <div class="well" style="background-color: gray">
 
-    <form action="/action_page.php" style="width:600px; margin: 0 auto;">
-        First name:<br>
-        <input type="text" name="firstname">
-        <br>
-        Last name:<br>
-        <input type="text" name="lastname">
-        <br> Choose nickname:<br>
-        <input type="text" name"nickname">
-        <br> Password:<br>
-        <input type="password" name"password"><br>
-        <br>
-        <br>Gender:
-        <br> <input type="radio" name="gender" value="male"> Male<br>
-        <input type="radio" name="gender" value="female"> Female<br>
-        <input type="radio" name="gender" value="other"> Other
-        <br>
-        <br>
-        <select>
-            <option value="none">Select Interest</option>
-            @foreach (Lifestyle option in Model.Lifestyle)
-            {
-                <option value=@option.lifestyleName> @option.lifestyleName</option>
-            }
+        <h1> Tell us about yourself</h1>
+        <div class="form-group centerlook">
+            <h2> Sign Up </h2>
+        </div>
+        <div class="input-group-lg">
+            <label>First name: </label>
+            <br />
+            @Html.EditorFor(model => model.firstName, new { @class = "form-control", placeholder = "First Name" })*
+        </div>
 
-        </select>
-        <input type="submit" value="Submit">
-    </form>
+        <div class="input-group-lg">
+            <label>Last name: </label>
+            <br />
+            @Html.EditorFor(model => model.lastName, new { @class = "form-control", placeholder = "Last Name" })*
+            @Html.ValidationMessageFor(model => model.lastName)
+        </div>
 
+        <div class="input-group-lg">
+            <label>Choose nickname: </label>
+            <br />
+            @Html.EditorFor(model => model.userName, new { @class = "form-control", placeholder = "Username" })*
+            @Html.ValidationMessageFor(model => model.userName)
+        </div>
+
+        <div class="input-group-lg">
+            <label>Gender: </label>
+            <br />
+            @Html.EditorFor(model => model.userName, new { @class = "form-control", placeholder = "Username" })*
+            @Html.ValidationMessageFor(model => model.userName)
+        </div>
+
+        <br />
+        Male @Html.RadioButtonFor(model => model.gender, "male", new { @class = "form-control"});
+        <br />
+        Female @Html.RadioButtonFor(model => model.gender, "female", new { @class = "form-control" });
+        <br />
+        Other @Html.RadioButtonFor(model => model.gender, "other", new { @class = "form-control" });
+        <br />
+
+        <div class="form-group">
+            @Html.DropDownListFor(model => model.lifestyle, new SelectList(Model.lifestyle, "lifestyleName"), new { @class = "form-control" })
+            @*@foreach (Lifestyle option in @Model.Lifestyle)
+        {
+            <option value=@option.lifestyleName> @option.lifestyleName</option>
+        }*@
+
+           </div>
+
+            <div class="form-group error">
+                @if (@ViewBag.Failedcount != null)
+                {
+                    <label> Failed Attempt count is: @ViewBag.Failedcount</label>
+                }
+                @if (@ViewBag.NotValidUser != null)
+                {
+                    <label> @ViewBag.NotValidUser</label>
+                }
+            </div>
+            <div class="loginbtn">
+                <input type="submit" value="SignUp" class="btn btn-primary" />
+            </div>
+
+        </div>
 </body>
-

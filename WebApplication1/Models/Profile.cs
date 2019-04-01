@@ -21,5 +21,6 @@ namespace WebApplication1.Models
         public string gender { get; set; }
         public string lifestyle { get; set; }
         public string userName { get; set; }
+        IEnumerable<Lifestyle> lifestyles { get; set; }
     }
 }
