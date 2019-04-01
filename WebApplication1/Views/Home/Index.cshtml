@@ -1,12 +1,17 @@
 ﻿@{
     ViewBag.Title = "| INVESTAGON |";
 }
+<div class="jumbotron" style="background-color: #9a9a9a">
+    <div class="well" style="background-color: #d8d7d7">
+        <h1>INVESTAGON</h1>
+        <h2>Best way to invest. The FUN way.</h2>
 
-<div class="jumbotron">
-    <img class="img-responsive" src="~/img/piggy.jpg" alt="Piggy Bank">
-    <h1>INVESTAGON</h1>
+        <p class="text-right">
+            <a href="~/Views/Home/SignUp.cshtml" @Url.Action() class="btn btn-primary btn-lg">Get Started &raquo;</a>
+        </p>
 
-    <p class="lead">Best way to invest. The FUN way.</p>
-    <p><a href="~/Views/Home/SignUp.cshtml" @Url.Action() class="btn btn-primary btn-lg">Get Started &raquo;</a></p>
+        <img class="img-responsive" src="~/img/piggy.jpg" alt="Piggy Bank">
+    </div>
+
 </div>
 
