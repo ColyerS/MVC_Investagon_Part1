@@ -391,13 +391,6 @@
     <Content Include="Models\Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
-    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <Content Include="obj\Debug\edmxResourcesToEmbed\Models\Model1.csdl" />
-    <Content Include="obj\Debug\edmxResourcesToEmbed\Models\Model1.msl" />
-    <Content Include="obj\Debug\edmxResourcesToEmbed\Models\Model1.ssdl" />
-    <Content Include="obj\Debug\WebApplication1.csproj.CopyComplete" />
-    <Content Include="obj\Debug\WebApplication1.csproj.CoreCompileInputs.cache" />
-    <Content Include="obj\Debug\WebApplication1.csprojAssemblyReference.cache" />
     <Content Include="bin\roslyn\csc.exe.config" />
     <Content Include="bin\roslyn\csc.rsp" />
     <Content Include="bin\roslyn\csi.exe.config" />
@@ -409,6 +402,14 @@
     <Content Include="bin\roslyn\vbc.rsp" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
     <Content Include="bin\WebApplication1.dll.config" />
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <Content Include="obj\Debug\edmxResourcesToEmbed\Models\Model1.csdl" />
+    <Content Include="obj\Debug\edmxResourcesToEmbed\Models\Model1.msl" />
+    <Content Include="obj\Debug\edmxResourcesToEmbed\Models\Model1.ssdl" />
+    <Content Include="obj\Debug\WebApplication1.csproj.CopyComplete" />
+    <Content Include="obj\Debug\WebApplication1.csproj.CoreCompileInputs.cache" />
+    <Content Include="obj\Debug\WebApplication1.csprojAssemblyReference.cache" />
+    <Content Include="obj\Release\WebApplication1.csproj.CoreCompileInputs.cache" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -436,9 +437,11 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\createProfile.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
-    <Content Include="Views\Home\AboutUs.cshtml" />
-    <Content Include="Views\Home\Dashboard.cshtml" />
     <Content Include="Views\Home\PortfolioOptions.cshtml" />
+    <Content Include="Views\Home\SignUp.cshtml" />
+    <Content Include="Views\Home\Dashboard.cshtml" />
+    <Content Include="Views\Home\createStockHistory.cshtml" />
+    <Content Include="Views\Home\DashboardUpdate.cshtml" />
     <Content Include="Views\Home\SignUp.cshtml" />
   </ItemGroup>
   <ItemGroup>
