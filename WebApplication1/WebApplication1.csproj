@@ -238,6 +238,9 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\createProfile.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Home\createStockHistory.cshtml" />
+    <Content Include="Views\Home\DashboardUpdate.cshtml" />
+    <Content Include="Views\Home\SignUp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

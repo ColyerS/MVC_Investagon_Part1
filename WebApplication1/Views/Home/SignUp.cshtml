@@ -1,6 +1,10 @@
-﻿@{
+﻿
+@using WebApplication1.Models;
+@{
     ViewData["Title"] = "SignUp";
 }
+
+@model dynamic
 
 <body>
     <h1> Tell us about yourself</h1>
@@ -24,9 +28,11 @@
         <br>
         <select>
             <option value="none">Select Interest</option>
-            <option value="binger">binger</option>
-            <option value="adventurer">adventurer</option>
-            <option value="sports_fan">sports fan</option>
+            @foreach (Lifestyle option in Model.Lifestyle)
+            {
+                <option value=@option.lifestyleName> @option.lifestyleName</option>
+            }
+
         </select>
         <input type="submit" value="Submit">
     </form>

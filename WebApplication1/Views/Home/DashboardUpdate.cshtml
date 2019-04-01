@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewBag.Title = "DashboardUpdate";
+}
+
+@model WebApplication1.Models.StockHistory
+
+<body>
+
+    <div class="well" style="background-color: gray">
+        @using (Html.BeginForm())
+        {
+
+            <div class="form-group centerlook">
+                <h1> Stock Chart Update </h1>
+            </div>
+            <div class="input-group-lg">
+                <label>Stock Capture: </label>
+                <br />
+                @Html.EditorFor(model => model.stockSymbol, new { @class = "form-control", placeholder = "Symbol" })
+            </div>
+            <br />
+            <div class="loginbtn">
+                <input type="submit" value="Update Dash" class="btn btn-primary" />
+            </div>
+        }
+    </div>
+</body>
+
+
+
