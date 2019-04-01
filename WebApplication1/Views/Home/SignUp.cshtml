@@ -7,35 +7,40 @@
 @model dynamic
 
 <body>
-    <h1> Tell us about yourself</h1>
+    <div class="jumbotron" style="background-color: #9a9a9a">
+        <h1>@ViewBag.Title</h1>
 
-    <form action="/action_page.php" style="width:600px; margin: 0 auto;">
-        First name:<br>
-        <input type="text" name="firstname">
-        <br>
-        Last name:<br>
-        <input type="text" name="lastname">
-        <br> Choose nickname:<br>
-        <input type="text" name"nickname">
-        <br> Password:<br>
-        <input type="password" name"password"><br>
-        <br>
-        <br>Gender:
-        <br> <input type="radio" name="gender" value="male"> Male<br>
-        <input type="radio" name="gender" value="female"> Female<br>
-        <input type="radio" name="gender" value="other"> Other
-        <br>
-        <br>
-        <select>
-            <option value="none">Select Interest</option>
-            @foreach (Lifestyle option in Model.Lifestyle)
-            {
-                <option value=@option.lifestyleName> @option.lifestyleName</option>
-            }
+        <h1> Tell us about yourself</h1>
 
-        </select>
-        <input type="submit" value="Submit">
-    </form>
+        <div class="well" style="background-color: #d8d7d7">
+            <form action="/action_page.php" style="width:600px; margin: 0 auto;">
+                First name:<br>
+                <input type="text" name="firstname">
+                <br>
+                Last name:<br>
+                <input type="text" name="lastname">
+                <br> Choose nickname:<br>
+                <input type="text" name"nickname">
+                <br> Password:<br>
+                <input type="password" name"password"><br>
+                <br>
+                <br>Gender:
+                <br> <input type="radio" name="gender" value="male"> Male<br>
+                <input type="radio" name="gender" value="female"> Female<br>
+                <input type="radio" name="gender" value="other"> Other
+                <br>
+                <br>
+                <select>
+                    <option value="none">Select Interest</option>
+                    @foreach (Lifestyle option in Model.Lifestyle)
+                    {
+                        <option value=@option.lifestyleName> @option.lifestyleName</option>
+                    }
 
+                </select>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
 </body>
 

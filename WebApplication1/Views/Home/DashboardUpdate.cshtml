@@ -6,25 +6,28 @@
 @model WebApplication1.Models.StockHistory
 
 <body>
+    <div class="jumbotron" style="background-color: #9a9a9a">
+        <h1>@ViewBag.Title</h1>
+        <div class="well" style="background-color: #d8d7d7">
+            @using (Html.BeginForm())
+            {
 
-    <div class="well" style="background-color: gray">
-        @using (Html.BeginForm())
-        {
-
-            <div class="form-group centerlook">
-                <h1> Stock Chart Update </h1>
-            </div>
-            <div class="input-group-lg">
-                <label>Stock Capture: </label>
+                <div class="form-group centerlook">
+                    <h1> Stock Chart Update </h1>
+                </div>
+                <div class="input-group-lg">
+                    <label>Stock Capture: </label>
+                    <br />
+                    @Html.EditorFor(model => model.stockSymbol, new { @class = "form-control", placeholder = "Symbol" })
+                </div>
                 <br />
-                @Html.EditorFor(model => model.stockSymbol, new { @class = "form-control", placeholder = "Symbol" })
-            </div>
-            <br />
-            <div class="loginbtn">
-                <input type="submit" value="Update Dash" class="btn btn-primary" />
-            </div>
-        }
+                <div class="loginbtn">
+                    <input type="submit" value="Update Dash" class="btn btn-primary" />
+                </div>
+            }
+        </div>
     </div>
+
 </body>
 
 

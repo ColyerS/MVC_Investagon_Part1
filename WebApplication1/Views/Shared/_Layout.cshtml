@@ -26,6 +26,7 @@
                     <li>@Html.ActionLink("Create Profile", "createProfile", "Home")</li>
                     <li>@Html.ActionLink("Dashboard", "Dashboard", "Home")</li>
                     <li>@Html.ActionLink("Portfolio Options", "PortfolioOptions", "Home")</li>
+                    <li>@Html.ActionLink("Contact Us", "Contact", "Home")</li>
                 </ul>
             </div>
         </div>
@@ -34,7 +35,13 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year | Colyer S | Mel K | Taras M |</p>
+            <center>
+                <p>
+                    &copy; @DateTime.Now.Year | Colyer S | Mel K | Taras M |
+                    @Html.ActionLink("About Us", "About", "Home") |
+                    @Html.ActionLink("Contact Us", "Contact", "Home")
+                </p>
+            </center>
         </footer>
     </div>
 

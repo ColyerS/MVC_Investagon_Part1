@@ -6,45 +6,44 @@
 @model WebApplication1.Models.Profile
 
 <body>
+    <div class="jumbotron" style="background-color: #9a9a9a">
+        <h1>@ViewBag.Title</h1>
+        <div class="well" style="background-color: #d8d7d7">
+            @using (Html.BeginForm())
+            {
+                <div class="input-group">
+                    <label>User Name:</label>
+                    <br />
 
-    <div class="well" style="background-color: gray">
-        @using (Html.BeginForm())
-        {
-
-            <div class="form-group centerlook">
-                <h1> Login </h1>
-            </div>
-            <div class="input-group-lg">
-                <label>User Name: </label>
+                    @Html.EditorFor(model => model.userName, new { @class = "form-control", placeholder = "Username" })
+                    @Html.ValidationMessageFor(model => model.userName)
+                </div>
                 <br />
-                @Html.EditorFor(model => model.userName, new { @class = "form-control", placeholder = "Username" })*
-                @Html.ValidationMessageFor(model => model.userName)
-            </div>
-            <br />
-            <div class="input-group">
-                <label>Password:</label>
-                <br />
+                <div class="input-group">
+                    <label>Password:</label>
+                    <br />
 
-                @Html.PasswordFor(model => model.password, new { @class = "form-control", placeholder = "Password" })
-                @Html.ValidationMessageFor(model => model.password)
+                    @Html.PasswordFor(model => model.password, new { @class = "form-control", placeholder = "Password" })
+                    @Html.ValidationMessageFor(model => model.password)
 
-            </div>
+                </div>
 
-            <div class="form-group error">
-                @if (@ViewBag.Failedcount != null)
-                {
-                    <label> Failed Attempt count is: @ViewBag.Failedcount</label>
-                }
-                @if (@ViewBag.NotValidUser != null)
-                {
-                    <label> @ViewBag.NotValidUser</label>
-                }
-            </div>
-            <div class="loginbtn">
-                <input type="submit" value="Login" class="btn btn-primary" />
-            </div>
+                <div class="form-group error">
+                    @if (@ViewBag.Failedcount != null)
+                    {
+                        <label> Failed Attempt count is: @ViewBag.Failedcount</label>
+                    }
+                    @if (@ViewBag.NotValidUser != null)
+                    {
+                        <label> @ViewBag.NotValidUser</label>
+                    }
+                </div>
 
-        }
+                <input type="submit" value="Log In" class="btn btn-primary btn-lg" />
+
+
+            }
+        </div>
     </div>
 </body>
 
