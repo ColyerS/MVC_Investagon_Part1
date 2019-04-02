@@ -1,125 +1,114 @@
 ﻿@{
     ViewBag.Title = "My Dashboard";
 }
+
+@model WebApplication1.Models.ResultViewModel
+
 <h1>@ViewBag.Title</h1>
 
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+    <style type="text/css">
+        .dollars:before {
+            content: '$';
+        }
+    </style>
+   
 </head>
 
 <body>
-    <div style="margin-left:25%;padding:1px 16px;height:100%;">
-        <center><h1> Stock Price Dashboard</h1></center>
-        <center><h2>Cash Invested per Company</h2></center>
-        <canvas id="doughnut-chart" width="400" height="225"></canvas>
-        <script>
-            new Chart(document.getElementById("doughnut-chart"), {
-                type: 'doughnut',
-                data: {
-                    labels: ["Apple Inc.", "Amazon", "Carvana Co.Class A", "TriNet Group Inc.", "TodaySquare Inc.Class A"],
-                    datasets: [
-                        {
-                            /*label: "Population (millions)",*/
-                            backgroundColor: ["#8e5ea2", "#3e95cd", "#3cb371", "#ffa500", "#ff0000"],
-                            data: [100, 100, 100, 100, 100]
-                        }
-                    ]
-                },
-                options: {
-                    title: {
-                        display: false,
-                        text: 'Predicted world population (millions) in 2050'
-                    }
-                }
-            });
-        </script>
+    @using (Html.BeginForm())
+    {
 
-        <center><h2>Stock Value (100s): Last 5 Days</h2></center>
-        <canvas id="mixed-chart" height="250" width="400"></canvas>
-        <script>
-            var myMixedChart = new Chart(document.getElementById("mixed-chart"), {
-                type: 'bar',
-                data: {
-                    labels: ["3/19", "3/20", "3/21", "3/22", "Today"],
-                    datasets:
-                        [{
-                            label: "Apple Inc.",
-                            type: "line",
-                            borderColor: "#8e5ea2",
-                            data: [450, 550, 500, 600, 400],
-                            fill: false
-                        },
-                        {
-                            label: "Amazon",
-                            type: "line",
-                            borderColor: "#3e95cd",
-                            data: [900, 1000, 950, 975, 985],
-                            fill: false
-                        },
-                        {
-                            label: "Carvana Co. Class A",
-                            type: "line",
-                            borderColor: "#3cb371",
-                            data: [100, 125, 115, 120, 110],
-                            fill: false
-                        },
-                        {
-                            label: "TriNet Group Inc.",
-                            type: "line",
-                            borderColor: "#ffa500",
-                            data: [90, 100, 110, 115, 100],
-                            fill: false
-                        },
-                        {
-                            label: "Square Inc. Class A",
-                            type: "line",
-                            borderColor: "#ff0000",
-                            data: [300, 275, 400, 350, 475],
-                            fill: false
-                        },
-                        {
-                            /*label: "TriNet Group Inc.",*/
-                            type: "bar",
-                            backgroundColor: "rgba(0,0,0,0.3)",
-                            data: [90, 100, 110, 115, 100],
-                        },
-                        {
-                            /* label: "Square Inc. Class A",*/
-                            type: "bar",
-                            backgroundColor: "rgba(0,0,0,0.3)",
-                            data: [300, 275, 400, 350, 475],
-                        },
-                        {
-                            /*label: "Carvana Co. Class A",*/
-                            type: "bar",
-                            backgroundColor: "rgba(0,0,0,0.3)",
-                            data: [100, 125, 115, 120, 110],
-                        },
-                        {
-                            /*label: "Apple Inc.",*/
-                            type: "bar",
-                            backgroundColor: "rgba(0,0,0,0.3)",
-                            data: [450, 550, 500, 600, 400],
-                        },
-                        {
-                            /*label: "Amazon",*/
-                            type: "bar",
-                            backgroundColor: "rgba(0,0,0,0.3)",
-                            backgroundColorHover: "#3e95cd",
-                            data: [900, 1000, 950, 975, 985]
-                        }]
-                },
-                options:
-                {
-                    legend: {
-                        display: false,
-                        position: 'right'
-                    }
-                }
-            });
-        </script>
-    </div>
+        <h3>Symbol: @Html.DisplayFor(modelItem => modelItem._quote.Symbol) </h3><br />
+        <h4>Date: @Html.DisplayFor(modelItem => modelItem._quote.ReportDate) </h4><br />
+        <h4>Share Quote: <span class="dollars">@Html.DisplayFor(modelItem => modelItem._quote.LatestPrice)</span> </h4><br />
+        <h4>Industry Sector: @Html.DisplayFor(modelItem => modelItem._quote.Sector) </h4><br />
 
+                  }
+                  @using (Html.BeginForm())
+                  {
+                      <table id="myTable" class="table" cellspacing="0">
+                          <thead>
 
+                              <tr>
+                                  <th>Report Date<br />       </th>
+                                  <th>Shareholder Equity<br />       </th>
+                              </tr>
+
+                          </thead>
+                          <tbody>
+                              @foreach (var item in Model._financials)
+                              {
+                                  <tr>
+                                      <td>
+                                          @Html.DisplayFor(modelItem => item.ReportDate) <br />
+                                      </td>
+                                      <td>
+                                          <span class="dollars">@Html.DisplayFor(modelItem => item.ShareholderEquity)</span> <br />
+                                      </td>
+                                  </tr>
+                              }
+                          </tbody>
+                      </table>
+                  }
+
+                  @using (Html.BeginForm())
+                  {
+                      <table id="myTable" class="table" cellspacing="0">
+                          <thead>
+
+                              <tr>
+                                  <th>Fiscal Period<br />       </th>
+                                  <th>Earnings Per Share<br />       </th>
+                              </tr>
+
+                          </thead>
+                          <tbody>
+                              @foreach (var item in Model._earnings)
+                              {
+                                  <tr>
+                                      <td>
+                                          @Html.DisplayFor(modelItem => item.FiscalPeriod) <br />
+                                      </td>
+                                      <td>
+                                          <span class="dollars">@Html.DisplayFor(modelItem => item.ActualEPS)</span> <br />
+                                      </td>
+                                  </tr>
+                              }
+                          </tbody>
+                      </table>
+                  }
+
+                      <div style="margin-left:25%;padding:1px 16px;height:100%;">
+                          <center><h2>Stock Value : Last Month</h2></center>
+                          <canvas id="bar-chart" height="250" width="400"></canvas>
+                          <script>
+                            var Dlabels =  @Html.Raw(ViewBag.DataLabels);
+                            var Dpoints =  @Html.Raw(ViewBag.DataPoints);
+                            var myMixedChart = new Chart(document.getElementById("bar-chart"), {
+                                type: 'bar',
+                                data: {
+                                    labels: Dlabels,
+                                    datasets:
+                                        [{
+                                            label: "Test",
+                                            type: "line",
+                                            borderColor: "#8e5ea2",
+                                            data: Dpoints,
+                                            fill: false
+                                        }]
+                                },
+                                options:
+                                {
+                                    legend: {
+                                        display: false,
+                                        position: 'right'
+                                    }
+                                }
+                            });
+                          </script>
+                        </div>
 
 </body>

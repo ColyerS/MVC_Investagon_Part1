@@ -12,14 +12,15 @@ namespace WebApplication1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Profile
+    public partial class Quote
     {
-        public int profileId { get; set; }
-        public string password { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public string gender { get; set; }
-        public string lifestyle { get; set; }
-        public string userName { get; set; }
+        public int QuoteId { get; set; }
+        public Nullable<decimal> LatestPrice { get; set; }
+        public Nullable<System.DateTime> ReportDate { get; set; }
+        public string Sector { get; set; }
+        public string Symbol { get; set; }
+        public Nullable<int> SymbolRef { get; set; }
+    
+        public virtual Symbol Symbol1 { get; set; }
     }
 }

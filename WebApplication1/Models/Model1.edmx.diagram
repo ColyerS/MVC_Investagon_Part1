@@ -4,14 +4,25 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="3cb1de24e4a24250b0514d72fa597f21" Name="Diagram1">
-        <EntityTypeShape EntityType="FinanceSiteModel.Lifestyle" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="FinanceSiteModel.LifestylePortfolio" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="FinanceSiteModel.PortfolioStock" Width="1.5" PointX="2.75" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="FinanceSiteModel.Profile" Width="1.5" PointX="5.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="FinanceSiteModel.StockHistory" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="FinanceSiteModel.UserStock" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
+      <Diagram DiagramId="0ddd07a693a1478e8bd5e085f62a443a" Name="Diagram1">
+        <EntityTypeShape EntityType="FinanceSiteModel.Chart" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinanceSiteModel.Company" Width="1.5" PointX="5.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinanceSiteModel.Earning" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinanceSiteModel.Equity" Width="1.5" PointX="8" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinanceSiteModel.Financial" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinanceSiteModel.Lifestyle" Width="1.5" PointX="5.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinanceSiteModel.LifestylePortfolio" Width="1.5" PointX="7.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinanceSiteModel.PortfolioStock" Width="1.5" PointX="5.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinanceSiteModel.Profile" Width="1.5" PointX="7.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinanceSiteModel.Quote" Width="1.5" PointX="3" PointY="10.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinanceSiteModel.StockHistory" Width="1.5" PointX="9.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinanceSiteModel.Symbol" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinanceSiteModel.UserStock" Width="1.5" PointX="9.75" PointY="8.75" IsExpanded="true" />
+        <AssociationConnector Association="FinanceSiteModel.FK__Chart__SymbolRef__6383C8BA" ManuallyRouted="false" />
         <AssociationConnector Association="FinanceSiteModel.FK_Equities_Companies_symbol" ManuallyRouted="false" />
+        <AssociationConnector Association="FinanceSiteModel.FK__Earnings__Symbol__5DCAEF64" ManuallyRouted="false" />
+        <AssociationConnector Association="FinanceSiteModel.FK__Financial__Symbo__60A75C0F" ManuallyRouted="false" />
+        <AssociationConnector Association="FinanceSiteModel.FK__Quote__SymbolRef__66603565" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

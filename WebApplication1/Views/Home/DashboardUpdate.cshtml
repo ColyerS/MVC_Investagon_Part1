@@ -3,7 +3,18 @@
     ViewBag.Title = "DashboardUpdate";
 }
 
-@model WebApplication1.Models.StockHistory
+@model WebApplication1.Models.Symbol
+
+@*<head>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#SymbolName").autocomplete({
+            source: '@Url.Action("Search","Home")'
+        });
+    });
+    </script>
+</head>*@
+
 
 <body>
     <div class="jumbotron" style="background-color: #9a9a9a">
@@ -18,8 +29,12 @@
                 <div class="input-group-lg">
                     <label>Stock Capture: </label>
                     <br />
-                    @Html.EditorFor(model => model.stockSymbol, new { @class = "form-control", placeholder = "Symbol" })
+                    @*<input type="text" id="SymbolName" placeholder="something">*@
+                    @*data-autocomplete="@Url.Action("Search","Home")" autocomplete="on" />*@
+                    @Html.EditorFor(model => model.Symbol1, new { @class = "form-control", placeholder = "Symbol" })
                 </div>
+                <p>Please type a stock ticker here.</p>
+                <p>A few ideas: AAPL, COLM, AMZN, HLT, DKS, BA, FB</p>
                 <br />
                 <div class="loginbtn">
                     <input type="submit" value="Update Dash" class="btn btn-primary" />

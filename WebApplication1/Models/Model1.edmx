@@ -4,7 +4,17 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="FinanceSiteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="FinanceSiteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Chart">
+          <Key>
+            <PropertyRef Name="ChartId" />
+          </Key>
+          <Property Name="ChartId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClosePrice" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="ReportDate" Type="date" />
+          <Property Name="Symbol" Type="varchar" MaxLength="255" />
+          <Property Name="SymbolRef" Type="int" />
+        </EntityType>
         <EntityType Name="Companies">
           <Key>
             <PropertyRef Name="symbol" />
@@ -15,6 +25,16 @@
           <Property Name="isEnabled" Type="bit" Nullable="false" />
           <Property Name="name" Type="nvarchar(max)" />
           <Property Name="type" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Earnings">
+          <Key>
+            <PropertyRef Name="EarningsId" />
+          </Key>
+          <Property Name="EarningsId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ActualEPS" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="FiscalPeriod" Type="varchar" MaxLength="255" />
+          <Property Name="Symbol" Type="varchar" MaxLength="255" />
+          <Property Name="SymbolRef" Type="int" />
         </EntityType>
         <EntityType Name="Equities">
           <Key>
@@ -34,6 +54,16 @@
           <Property Name="unadjustedVolume" Type="int" Nullable="false" />
           <Property Name="volume" Type="int" Nullable="false" />
           <Property Name="vwap" Type="real" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Financials">
+          <Key>
+            <PropertyRef Name="FinancialsId" />
+          </Key>
+          <Property Name="FinancialsId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShareholderEquity" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="ReportDate" Type="date" />
+          <Property Name="Symbol" Type="varchar" MaxLength="255" />
+          <Property Name="SymbolRef" Type="int" />
         </EntityType>
         <EntityType Name="Lifestyle">
           <Key>
@@ -74,6 +104,17 @@
           <Property Name="lifestyle" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="userName" Type="nvarchar" MaxLength="255" />
         </EntityType>
+        <EntityType Name="Quote">
+          <Key>
+            <PropertyRef Name="QuoteId" />
+          </Key>
+          <Property Name="QuoteId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LatestPrice" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="ReportDate" Type="date" />
+          <Property Name="Sector" Type="varchar" MaxLength="1000" />
+          <Property Name="Symbol" Type="varchar" MaxLength="255" />
+          <Property Name="SymbolRef" Type="int" />
+        </EntityType>
         <EntityType Name="StockHistory">
           <Key>
             <PropertyRef Name="stockId" />
@@ -82,6 +123,14 @@
           <Property Name="stockSymbol" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="stockDate" Type="date" Nullable="false" />
           <Property Name="stockPrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Symbols">
+          <Key>
+            <PropertyRef Name="SymbolId" />
+          </Key>
+          <Property Name="SymbolId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Symbol" Type="varchar" MaxLength="500" />
+          <Property Name="SymbolName" Type="varchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="UserStocks">
           <Key>
@@ -98,6 +147,54 @@
           <Property Name="purchaseQty" Type="decimal" Precision="18" Scale="2" />
           <Property Name="soldPrice" Type="decimal" Precision="18" Scale="2" />
         </EntityType>
+        <Association Name="FK__Chart__SymbolRef__6383C8BA">
+          <End Role="Symbols" Type="Self.Symbols" Multiplicity="0..1" />
+          <End Role="Chart" Type="Self.Chart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Symbols">
+              <PropertyRef Name="SymbolId" />
+            </Principal>
+            <Dependent Role="Chart">
+              <PropertyRef Name="SymbolRef" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Earnings__Symbol__5DCAEF64">
+          <End Role="Symbols" Type="Self.Symbols" Multiplicity="0..1" />
+          <End Role="Earnings" Type="Self.Earnings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Symbols">
+              <PropertyRef Name="SymbolId" />
+            </Principal>
+            <Dependent Role="Earnings">
+              <PropertyRef Name="SymbolRef" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Financial__Symbo__60A75C0F">
+          <End Role="Symbols" Type="Self.Symbols" Multiplicity="0..1" />
+          <End Role="Financials" Type="Self.Financials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Symbols">
+              <PropertyRef Name="SymbolId" />
+            </Principal>
+            <Dependent Role="Financials">
+              <PropertyRef Name="SymbolRef" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Quote__SymbolRef__66603565">
+          <End Role="Symbols" Type="Self.Symbols" Multiplicity="0..1" />
+          <End Role="Quote" Type="Self.Quote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Symbols">
+              <PropertyRef Name="SymbolId" />
+            </Principal>
+            <Dependent Role="Quote">
+              <PropertyRef Name="SymbolRef" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Equities_Companies_symbol">
           <End Role="Companies" Type="Self.Companies" Multiplicity="0..1" />
           <End Role="Equities" Type="Self.Equities" Multiplicity="*" />
@@ -111,23 +208,56 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="FinanceSiteModelStoreContainer">
+          <EntitySet Name="Chart" EntityType="Self.Chart" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Companies" EntityType="Self.Companies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Earnings" EntityType="Self.Earnings" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Equities" EntityType="Self.Equities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Financials" EntityType="Self.Financials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Lifestyle" EntityType="Self.Lifestyle" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LifestylePortfolio" EntityType="Self.LifestylePortfolio" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PortfolioStocks" EntityType="Self.PortfolioStocks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Profile" EntityType="Self.Profile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Quote" EntityType="Self.Quote" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StockHistory" EntityType="Self.StockHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Symbols" EntityType="Self.Symbols" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserStocks" EntityType="Self.UserStocks" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Chart__SymbolRef__6383C8BA" Association="Self.FK__Chart__SymbolRef__6383C8BA">
+            <End Role="Symbols" EntitySet="Symbols" />
+            <End Role="Chart" EntitySet="Chart" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Earnings__Symbol__5DCAEF64" Association="Self.FK__Earnings__Symbol__5DCAEF64">
+            <End Role="Symbols" EntitySet="Symbols" />
+            <End Role="Earnings" EntitySet="Earnings" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Financial__Symbo__60A75C0F" Association="Self.FK__Financial__Symbo__60A75C0F">
+            <End Role="Symbols" EntitySet="Symbols" />
+            <End Role="Financials" EntitySet="Financials" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Quote__SymbolRef__66603565" Association="Self.FK__Quote__SymbolRef__66603565">
+            <End Role="Symbols" EntitySet="Symbols" />
+            <End Role="Quote" EntitySet="Quote" />
+          </AssociationSet>
           <AssociationSet Name="FK_Equities_Companies_symbol" Association="Self.FK_Equities_Companies_symbol">
             <End Role="Companies" EntitySet="Companies" />
             <End Role="Equities" EntitySet="Equities" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="FinanceSiteModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Chart">
+          <Key>
+            <PropertyRef Name="ChartId" />
+          </Key>
+          <Property Name="ChartId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClosePrice" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ReportDate" Type="DateTime" Precision="0" />
+          <Property Name="Symbol" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="SymbolRef" Type="Int32" />
+          <NavigationProperty Name="Symbol1" Relationship="Self.FK__Chart__SymbolRef__6383C8BA" FromRole="Chart" ToRole="Symbols" />
+        </EntityType>
         <EntityType Name="Company">
           <Key>
             <PropertyRef Name="symbol" />
@@ -139,6 +269,17 @@
           <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Equities" Relationship="Self.FK_Equities_Companies_symbol" FromRole="Companies" ToRole="Equities" />
+        </EntityType>
+        <EntityType Name="Earning">
+          <Key>
+            <PropertyRef Name="EarningsId" />
+          </Key>
+          <Property Name="EarningsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ActualEPS" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="FiscalPeriod" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Symbol" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="SymbolRef" Type="Int32" />
+          <NavigationProperty Name="Symbol1" Relationship="Self.FK__Earnings__Symbol__5DCAEF64" FromRole="Earnings" ToRole="Symbols" />
         </EntityType>
         <EntityType Name="Equity">
           <Key>
@@ -159,6 +300,17 @@
           <Property Name="volume" Type="Int32" Nullable="false" />
           <Property Name="vwap" Type="Single" Nullable="false" />
           <NavigationProperty Name="Company" Relationship="Self.FK_Equities_Companies_symbol" FromRole="Equities" ToRole="Companies" />
+        </EntityType>
+        <EntityType Name="Financial">
+          <Key>
+            <PropertyRef Name="FinancialsId" />
+          </Key>
+          <Property Name="FinancialsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ShareholderEquity" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ReportDate" Type="DateTime" Precision="0" />
+          <Property Name="Symbol" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="SymbolRef" Type="Int32" />
+          <NavigationProperty Name="Symbol1" Relationship="Self.FK__Financial__Symbo__60A75C0F" FromRole="Financials" ToRole="Symbols" />
         </EntityType>
         <EntityType Name="Lifestyle">
           <Key>
@@ -199,6 +351,18 @@
           <Property Name="lifestyle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="userName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Quote">
+          <Key>
+            <PropertyRef Name="QuoteId" />
+          </Key>
+          <Property Name="QuoteId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LatestPrice" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ReportDate" Type="DateTime" Precision="0" />
+          <Property Name="Sector" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Symbol" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="SymbolRef" Type="Int32" />
+          <NavigationProperty Name="Symbol1" Relationship="Self.FK__Quote__SymbolRef__66603565" FromRole="Quote" ToRole="Symbols" />
+        </EntityType>
         <EntityType Name="StockHistory">
           <Key>
             <PropertyRef Name="stockId" />
@@ -207,6 +371,18 @@
           <Property Name="stockSymbol" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="stockDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="stockPrice" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Symbol">
+          <Key>
+            <PropertyRef Name="SymbolId" />
+          </Key>
+          <Property Name="SymbolId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Symbol1" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="SymbolName" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Charts" Relationship="Self.FK__Chart__SymbolRef__6383C8BA" FromRole="Symbols" ToRole="Chart" />
+          <NavigationProperty Name="Earnings" Relationship="Self.FK__Earnings__Symbol__5DCAEF64" FromRole="Symbols" ToRole="Earnings" />
+          <NavigationProperty Name="Financials" Relationship="Self.FK__Financial__Symbo__60A75C0F" FromRole="Symbols" ToRole="Financials" />
+          <NavigationProperty Name="Quotes" Relationship="Self.FK__Quote__SymbolRef__66603565" FromRole="Symbols" ToRole="Quote" />
         </EntityType>
         <EntityType Name="UserStock">
           <Key>
@@ -223,6 +399,18 @@
           <Property Name="purchaseQty" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="soldPrice" Type="Decimal" Precision="18" Scale="2" />
         </EntityType>
+        <Association Name="FK__Chart__SymbolRef__6383C8BA">
+          <End Role="Symbols" Type="Self.Symbol" Multiplicity="0..1" />
+          <End Role="Chart" Type="Self.Chart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Symbols">
+              <PropertyRef Name="SymbolId" />
+            </Principal>
+            <Dependent Role="Chart">
+              <PropertyRef Name="SymbolRef" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Equities_Companies_symbol">
           <End Role="Companies" Type="Self.Company" Multiplicity="0..1" />
           <End Role="Equities" Type="Self.Equity" Multiplicity="*" />
@@ -235,18 +423,75 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="FinanceSiteEntities" annotation:LazyLoadingEnabled="true">
+        <Association Name="FK__Earnings__Symbol__5DCAEF64">
+          <End Role="Symbols" Type="Self.Symbol" Multiplicity="0..1" />
+          <End Role="Earnings" Type="Self.Earning" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Symbols">
+              <PropertyRef Name="SymbolId" />
+            </Principal>
+            <Dependent Role="Earnings">
+              <PropertyRef Name="SymbolRef" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Financial__Symbo__60A75C0F">
+          <End Role="Symbols" Type="Self.Symbol" Multiplicity="0..1" />
+          <End Role="Financials" Type="Self.Financial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Symbols">
+              <PropertyRef Name="SymbolId" />
+            </Principal>
+            <Dependent Role="Financials">
+              <PropertyRef Name="SymbolRef" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Quote__SymbolRef__66603565">
+          <End Role="Symbols" Type="Self.Symbol" Multiplicity="0..1" />
+          <End Role="Quote" Type="Self.Quote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Symbols">
+              <PropertyRef Name="SymbolId" />
+            </Principal>
+            <Dependent Role="Quote">
+              <PropertyRef Name="SymbolRef" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FinanceSiteEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Charts" EntityType="Self.Chart" />
           <EntitySet Name="Companies" EntityType="Self.Company" />
+          <EntitySet Name="Earnings" EntityType="Self.Earning" />
           <EntitySet Name="Equities" EntityType="Self.Equity" />
+          <EntitySet Name="Financials" EntityType="Self.Financial" />
           <EntitySet Name="Lifestyles" EntityType="Self.Lifestyle" />
           <EntitySet Name="LifestylePortfolios" EntityType="Self.LifestylePortfolio" />
           <EntitySet Name="PortfolioStocks" EntityType="Self.PortfolioStock" />
           <EntitySet Name="Profiles" EntityType="Self.Profile" />
+          <EntitySet Name="Quotes" EntityType="Self.Quote" />
           <EntitySet Name="StockHistories" EntityType="Self.StockHistory" />
+          <EntitySet Name="Symbols" EntityType="Self.Symbol" />
           <EntitySet Name="UserStocks" EntityType="Self.UserStock" />
+          <AssociationSet Name="FK__Chart__SymbolRef__6383C8BA" Association="Self.FK__Chart__SymbolRef__6383C8BA">
+            <End Role="Symbols" EntitySet="Symbols" />
+            <End Role="Chart" EntitySet="Charts" />
+          </AssociationSet>
           <AssociationSet Name="FK_Equities_Companies_symbol" Association="Self.FK_Equities_Companies_symbol">
             <End Role="Companies" EntitySet="Companies" />
             <End Role="Equities" EntitySet="Equities" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Earnings__Symbol__5DCAEF64" Association="Self.FK__Earnings__Symbol__5DCAEF64">
+            <End Role="Symbols" EntitySet="Symbols" />
+            <End Role="Earnings" EntitySet="Earnings" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Financial__Symbo__60A75C0F" Association="Self.FK__Financial__Symbo__60A75C0F">
+            <End Role="Symbols" EntitySet="Symbols" />
+            <End Role="Financials" EntitySet="Financials" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Quote__SymbolRef__66603565" Association="Self.FK__Quote__SymbolRef__66603565">
+            <End Role="Symbols" EntitySet="Symbols" />
+            <End Role="Quote" EntitySet="Quotes" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -254,7 +499,18 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="FinanceSiteModelStoreContainer" CdmEntityContainer="FinanceSiteEntities">
+        <EntityContainerMapping StorageEntityContainer="FinanceSiteModelStoreContainer" CdmEntityContainer="FinanceSiteEntities1">
+          <EntitySetMapping Name="Charts">
+            <EntityTypeMapping TypeName="FinanceSiteModel.Chart">
+              <MappingFragment StoreEntitySet="Chart">
+                <ScalarProperty Name="ChartId" ColumnName="ChartId" />
+                <ScalarProperty Name="ClosePrice" ColumnName="ClosePrice" />
+                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
+                <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+                <ScalarProperty Name="SymbolRef" ColumnName="SymbolRef" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Companies">
             <EntityTypeMapping TypeName="FinanceSiteModel.Company">
               <MappingFragment StoreEntitySet="Companies">
@@ -264,6 +520,17 @@
                 <ScalarProperty Name="isEnabled" ColumnName="isEnabled" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Earnings">
+            <EntityTypeMapping TypeName="FinanceSiteModel.Earning">
+              <MappingFragment StoreEntitySet="Earnings">
+                <ScalarProperty Name="EarningsId" ColumnName="EarningsId" />
+                <ScalarProperty Name="ActualEPS" ColumnName="ActualEPS" />
+                <ScalarProperty Name="FiscalPeriod" ColumnName="FiscalPeriod" />
+                <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+                <ScalarProperty Name="SymbolRef" ColumnName="SymbolRef" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -284,6 +551,17 @@
                 <ScalarProperty Name="unadjustedVolume" ColumnName="unadjustedVolume" />
                 <ScalarProperty Name="volume" ColumnName="volume" />
                 <ScalarProperty Name="vwap" ColumnName="vwap" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Financials">
+            <EntityTypeMapping TypeName="FinanceSiteModel.Financial">
+              <MappingFragment StoreEntitySet="Financials">
+                <ScalarProperty Name="FinancialsId" ColumnName="FinancialsId" />
+                <ScalarProperty Name="ShareholderEquity" ColumnName="ShareholderEquity" />
+                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
+                <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+                <ScalarProperty Name="SymbolRef" ColumnName="SymbolRef" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -320,13 +598,25 @@
           <EntitySetMapping Name="Profiles">
             <EntityTypeMapping TypeName="FinanceSiteModel.Profile">
               <MappingFragment StoreEntitySet="Profile">
-                <ScalarProperty Name="userName" ColumnName="userName" />
                 <ScalarProperty Name="profileId" ColumnName="profileId" />
                 <ScalarProperty Name="password" ColumnName="password" />
                 <ScalarProperty Name="firstName" ColumnName="firstName" />
                 <ScalarProperty Name="lastName" ColumnName="lastName" />
                 <ScalarProperty Name="gender" ColumnName="gender" />
                 <ScalarProperty Name="lifestyle" ColumnName="lifestyle" />
+                <ScalarProperty Name="userName" ColumnName="userName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Quotes">
+            <EntityTypeMapping TypeName="FinanceSiteModel.Quote">
+              <MappingFragment StoreEntitySet="Quote">
+                <ScalarProperty Name="QuoteId" ColumnName="QuoteId" />
+                <ScalarProperty Name="LatestPrice" ColumnName="LatestPrice" />
+                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
+                <ScalarProperty Name="Sector" ColumnName="Sector" />
+                <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+                <ScalarProperty Name="SymbolRef" ColumnName="SymbolRef" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -337,6 +627,15 @@
                 <ScalarProperty Name="stockSymbol" ColumnName="stockSymbol" />
                 <ScalarProperty Name="stockDate" ColumnName="stockDate" />
                 <ScalarProperty Name="stockPrice" ColumnName="stockPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Symbols">
+            <EntityTypeMapping TypeName="FinanceSiteModel.Symbol">
+              <MappingFragment StoreEntitySet="Symbols">
+                <ScalarProperty Name="SymbolId" ColumnName="SymbolId" />
+                <ScalarProperty Name="Symbol1" ColumnName="Symbol" />
+                <ScalarProperty Name="SymbolName" ColumnName="SymbolName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -13,10 +13,10 @@ namespace WebApplication1.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class FinanceSiteEntities : DbContext
+    public partial class FinanceSiteEntities1 : DbContext
     {
-        public FinanceSiteEntities()
-            : base("name=FinanceSiteEntities")
+        public FinanceSiteEntities1()
+            : base("name=FinanceSiteEntities1")
         {
         }
     
@@ -25,13 +25,18 @@ namespace WebApplication1.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Chart> Charts { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
+        public virtual DbSet<Earning> Earnings { get; set; }
         public virtual DbSet<Equity> Equities { get; set; }
+        public virtual DbSet<Financial> Financials { get; set; }
         public virtual DbSet<Lifestyle> Lifestyles { get; set; }
         public virtual DbSet<LifestylePortfolio> LifestylePortfolios { get; set; }
         public virtual DbSet<PortfolioStock> PortfolioStocks { get; set; }
         public virtual DbSet<Profile> Profiles { get; set; }
+        public virtual DbSet<Quote> Quotes { get; set; }
         public virtual DbSet<StockHistory> StockHistories { get; set; }
+        public virtual DbSet<Symbol> Symbol { get; set; }
         public virtual DbSet<UserStock> UserStocks { get; set; }
     }
 }

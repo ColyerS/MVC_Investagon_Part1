@@ -14,7 +14,7 @@ namespace WebApplication1.Controllers
     public class HomeController : Controller
     {
 
-        private FinanceSiteEntities db = new FinanceSiteEntities();
+        public FinanceSiteEntities1 db = new FinanceSiteEntities1();
         public ActionResult Index()
         {
             return View();
@@ -27,111 +27,172 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        public ActionResult SignUp()
-        {
-            ViewBag.Message = "Sign up form.";
-
-            return View();
-        }
-
-        public ActionResult SignUp()
-        {
-            Profile profile = new Profile();
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult SignUp(Profile profile)
-        {
-            return View(profile);
-        }
-
-        //public List<Lifestyle> GetLifestyles()
-        //{
-        //    List<Lifestyle> lifestylelist = new List<Lifestyle>();
-        //    lifestylelist = db.Lifestyles.ToList();
-        //    foreach (Lifestyle l in db.Lifestyles.ToList())
-        //    {
-
-        //    }
-        //    return lifestylelist;
-        //}
-
-        //test create record in Profile table
-        //public ActionResult createProfile()
-        //{
-        //    Profile profile = new Profile();
-        //    profile.userName = "csigety";
-        //    profile.password = "nothing";
-        //    profile.gender = "f";
-        //    profile.firstName = "Colyer";
-        //    profile.lastName = "Sigety";
-        //    profile.lifestyle = "binger";
-
-        //    db.Profiles.Add(profile);
-        //    db.SaveChanges();
-
-        //    return View();
-        //}
-
-        public ActionResult Login()
-        {
-            Profile profile = new Profile();
-
-            return View(profile);
-        }
       
-
-        [HttpPost]
-        public ActionResult Login(Profile profile)
-        {
-
-            return View(profile);
-            //when user inputs the 
-            //return View("Dashboard");
-        }
 
         //DASHBOARD _ GRAB NEW DATA FOR A SYMBOL, UPDATE DATA FOR SYMBOL.
         public ActionResult DashboardUpdate()
         {
-            StockHistory model = new StockHistory();
+            Symbol model = new Symbol();
+
 
             return View();
         }
 
+        //public ActionResult Search(string term)
+        //{
+        //    var names = db.Symbol.Where(p => p.SymbolName.Contains(term)).Select(p => p.SymbolName).ToList();
+        //    return Json(names, JsonRequestBehavior.AllowGet);
+        //}
+
         //test run program when submit button is entered on DashboardUpdate
         [HttpPost]
-        public ActionResult DashboardUpdate(StockHistory model)
+        public ActionResult DashboardUpdate(Symbol model)
         {
-            List<StockHistory> stockHistoryList = WriteChartSymbol(model.stockSymbol);
-            foreach (StockHistory sh in stockHistoryList)
+            //Get symbol model for user lookup.
+            var symbolid = db.Symbol
+                    .Where(b => b.Symbol1 == model.Symbol1)
+                    .FirstOrDefault();
+
+            //Input Chart data into chart table from API based on symbol
+            List<Chart> chartList = WriteChartSymbol(symbolid);
+            db.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.[Chart]");
+            foreach (Chart cL in chartList)
             {
-                db.StockHistories.Add(sh);
+                db.Charts.Add(cL);
                 db.SaveChanges();
             }
 
-            return View();
+            //Input Quote data into quote table from API based on symbol
+            db.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.[Quote]");
+            Quote quoteTest = WriteQuote(symbolid);
+            db.Quotes.Add(quoteTest);
+            db.SaveChanges();
+
+            //Input Earnings data into earnings table from API based on symbol
+            List<Earning> earningList = WriteEarnings(symbolid);
+            db.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.[Earnings]");
+            foreach (Earning eL in earningList)
+            {
+                db.Earnings.Add(eL);
+                db.SaveChanges();
+            }
+            //Input Financials data into financials table from API based on symbol
+            List<Financial> financialList = WriteFinancials(symbolid);
+            db.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.[Financials]");
+            foreach (Financial fL in financialList)
+            {
+                db.Financials.Add(fL);
+                db.SaveChanges();
+            }
+            
+            //persist data for next request
+            TempData["SymbolInfo"] = symbolid;
+
+            return RedirectToAction("Dashboard", symbolid.SymbolId);
             //when user inputs the 
             //return View("Dashboard");
         }
 
-
-        public static string mostactiveUrl = "https://api.iextrading.com/1.0/stock/market/list/mostactive";
-        public static string gainersUrl = "https://api.iextrading.com/1.0/stock/market/list/gainers";
-        public static string losersUrl = "https://api.iextrading.com/1.0/stock/market/list/losers";
-        public static string MostVolumeUrl = "https://api.iextrading.com/1.0/stock/market/list/iexvolume";
-        public static string PercentChangeUrl = "https://api.iextrading.com/1.0/stock/market/list/iexpercent";
-        public static string infocusUrl = "https://api.iextrading.com/1.0/stock/market/list/infocus";
-        public static string OneDayListUrl = "https://api.iextrading.com/1.0/stock/{0}/chart/1d";
-        public static string sectorPerfUrl = "https://api.iextrading.com/1.0/stock/market/sector-performance";
-        public static string topsUrl = "https://api.iextrading.com/1.0/tops";
-
-        public static List<StockHistory> WriteChartSymbol(string symbol)
+        [HttpGet]
+        public ActionResult Dashboard(string symbolInt)
         {
-            List<StockHistory> symbolHistory = new List<StockHistory>();
+            //check that symbol is not null
+            if (TempData["SymbolInfo"] != null)
+            {
+                var symbolid = TempData["SymbolInfo"] as Symbol;
+                //Get Quote Detail
+                var quote1 = (from a in db.Quotes
+                                  where a.SymbolRef == symbolid.SymbolId
+                                  select a).FirstOrDefault();
+                
+                //Get Financial Detail
+                var financialsL = (from a in db.Financials
+                               where a.SymbolRef == symbolid.SymbolId
+                               select a).ToList();
+
+                //Get Result Exam marks detail as per student ID  
+                var earningsL = (from a in db.Earnings
+                              where a.SymbolRef == symbolid.SymbolId
+                              select a).ToList();
+                
+                //Create a list of dates and points for the chart to consume.
+                var chartL = (from a in db.Charts
+                 where a.SymbolRef == symbolid.SymbolId
+                 select a).ToList();
+
+                List<int> chartPoints = new List<int>();
+                foreach (Chart p in chartL)
+                {
+                    chartPoints.Add(Convert.ToInt32(p.ClosePrice));
+                }
+
+                List<string> chartDates = new List<string>();
+                foreach (Chart p in chartL)
+                {
+                    DateTime dt = Convert.ToDateTime(p.ReportDate);
+                    chartDates.Add(dt.ToString("MM-dd-yy"));
+                }
+
+                ViewBag.DataPoints = JsonConvert.SerializeObject(chartPoints);
+                ViewBag.DataLabels = JsonConvert.SerializeObject(chartDates);
+
+                //Output set to ViewModel  
+                var model = new ResultViewModel { _financials = financialsL, _quote = quote1 , _earnings = earningsL};
+
+                return View(model);
+            }
+            else //error if there is not symbol input.
+            {
+                return View("error");
+            }
+         
+        }
+
+        //Get quote for current symbol.
+        public static Quote WriteQuote(Symbol symbol)
+        {
+            Quote quoteTest = new Quote();
+            var IEXTrading_API_PATH = "https://api.iextrading.com/1.0/stock/{0}/quote?displayPercent=true";
+
+            IEXTrading_API_PATH = string.Format(IEXTrading_API_PATH, symbol.Symbol1);
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                //For IP-API
+                client.BaseAddress = new Uri(IEXTrading_API_PATH);
+                HttpResponseMessage response = client.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
+                if (response.IsSuccessStatusCode)
+                {
+                    dynamic historicalData  = JsonConvert.DeserializeObject<dynamic>(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+                    
+                        Quote quoteTest2 = new Quote();
+                        quoteTest2.Sector = historicalData.sector;
+                        quoteTest2.ReportDate = Convert.ToDateTime(historicalData.latestTime);
+                        quoteTest2.LatestPrice = Convert.ToDecimal(historicalData.latestPrice);
+                        quoteTest2.Symbol = Convert.ToString(historicalData.symbol);
+                        quoteTest2.Symbol1 = symbol;
+                        quoteTest2.SymbolRef = symbol.SymbolId;
+
+                        quoteTest = quoteTest2;
+
+                        return quoteTest;
+                }
+                
+            }
+            return quoteTest;
+        }
+
+ 
+        //Chart Table update.
+        public static List<Chart> WriteChartSymbol(Symbol symbol)
+        {
+            List<Chart> symbolChart = new List<Chart>();
             var IEXTrading_API_PATH = "https://api.iextrading.com/1.0/stock/{0}/chart/1m";
 
-            IEXTrading_API_PATH = string.Format(IEXTrading_API_PATH, symbol);
+            IEXTrading_API_PATH = string.Format(IEXTrading_API_PATH, symbol.Symbol1);
 
             using (HttpClient client = new HttpClient())
             {
@@ -145,18 +206,14 @@ namespace WebApplication1.Controllers
                 {
                     foreach (dynamic historicalData in JsonConvert.DeserializeObject<List<dynamic>>(response.Content.ReadAsStringAsync().GetAwaiter().GetResult()))
                     {
-                        //Console.WriteLine("Open: " + historicalData.open);
-                        //Console.WriteLine("Close: " + historicalData.close);
-                        //Console.WriteLine("Low: " + historicalData.low);
-                        //Console.WriteLine("High: " + historicalData.high);
-                        //Console.WriteLine("Change: " + historicalData.change);
-                        //Console.WriteLine("Change Percentage: " + historicalData.changePercent);
-                        StockHistory stockTest = new StockHistory();
-                        stockTest.stockSymbol = symbol;
-                        stockTest.stockDate = Convert.ToDateTime(historicalData.date);
-                        stockTest.stockPrice = Convert.ToDecimal(historicalData.close);
+                        Chart stockTest = new Chart();
+                        stockTest.Symbol1 = symbol;
+                        stockTest.SymbolRef = symbol.SymbolId;
+                        stockTest.Symbol = symbol.Symbol1;
+                        stockTest.ReportDate = Convert.ToDateTime(historicalData.date);
+                        stockTest.ClosePrice= Convert.ToDecimal(historicalData.close);
 
-                        symbolHistory.Add(stockTest);
+                        symbolChart.Add(stockTest);
                         //private FinanceSiteEntities dbAPIController = new FinanceSiteEntities();
 
 
@@ -164,65 +221,196 @@ namespace WebApplication1.Controllers
                         //dbAPIController.SaveChanges();
 
                     }
-                    return symbolHistory;
+                    return symbolChart;
                 }
                 else if (!(response.IsSuccessStatusCode))
                 {
-                    return symbolHistory;
+                    return symbolChart;
                 }
-                return symbolHistory;
+                return symbolChart;
             }
         }
 
-        public static string quoteUrl = "https://api.iextrading.com/1.0/stock/{0}/quote?displayPercent=true";
-        public static List<PortfolioStock> QuoteSymbol(List<string> symbols)
+        //Earnings table update.
+        public static List<Earning> WriteEarnings(Symbol symbol)
         {
-            List<PortfolioStock> stockQuote = new List<PortfolioStock>();
-            var IEXTrading_API_PATH = quoteUrl;
-            foreach (string symbol in symbols)
+            List<Earning> symbolEarning = new List<Earning>();
+            var IEXTrading_API_PATH = "https://api.iextrading.com/1.0/stock/{0}/earnings";
+
+            IEXTrading_API_PATH = string.Format(IEXTrading_API_PATH, symbol.Symbol1);
+
+            using (HttpClient client = new HttpClient())
             {
-                IEXTrading_API_PATH = string.Format(IEXTrading_API_PATH, symbol);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                using (HttpClient client = new HttpClient())
+                //For IP-API
+                client.BaseAddress = new Uri(IEXTrading_API_PATH);
+                HttpResponseMessage response = client.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
+                if (response.IsSuccessStatusCode)
                 {
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
-                    //For IP-API
-                    client.BaseAddress = new Uri(IEXTrading_API_PATH);
-                    HttpResponseMessage response = client.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
-                    if (response.IsSuccessStatusCode)
-                    {
-                        foreach (dynamic quoteData in JsonConvert.DeserializeObject<List<dynamic>>(response.Content.ReadAsStringAsync().GetAwaiter().GetResult()))
-                        {
-                            //Console.WriteLine("Open: " + historicalData.open);
-                            //Console.WriteLine("Close: " + historicalData.close);
-                            //Console.WriteLine("Low: " + historicalData.low);
-                            //Console.WriteLine("High: " + historicalData.high);
-                            //Console.WriteLine("Change: " + historicalData.change);
-                            //Console.WriteLine("Change Percentage: " + historicalData.changePercent);
-                            PortfolioStock stockTest = new PortfolioStock();
-                            stockTest.stockSymbol = symbol;
-                            stockTest.stockName = Convert.ToString(quoteData.companyName);
-                            stockTest.currentPrice = Convert.ToDecimal(quoteData.latestPrice);
-
-                            stockQuote.Add(stockTest);
-
-                        }
-                        return stockQuote;
-                    }
-                    else if (!(response.IsSuccessStatusCode))
-                    {
-                        return stockQuote;
-                    }
+                    dynamic historicalData = JsonConvert.DeserializeObject<dynamic>(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
                     
+                    foreach (dynamic s in JsonConvert.DeserializeObject<List<dynamic>>(Convert.ToString(historicalData.earnings)))
+                    {
+                        Earning stockE = new Earning();
+                        stockE.Symbol1 = symbol;
+                        stockE.SymbolRef = symbol.SymbolId;
+                        stockE.Symbol = symbol.Symbol1;
+                        stockE.FiscalPeriod = Convert.ToString(s.fiscalPeriod);
+                        stockE.ActualEPS = Convert.ToDecimal(s.actualEPS);
+
+                        symbolEarning.Add(stockE);
+                    }
+
+                       
+                    return symbolEarning;
                 }
-               
+                else if (!(response.IsSuccessStatusCode))
+                {
+                    return symbolEarning;
+                }
+                return symbolEarning;
             }
-            return stockQuote;
         }
 
+        //Financials table update.
+        public static List<Financial> WriteFinancials(Symbol symbol)
+        {
+            List<Financial> symbolFinancial = new List<Financial>();
+            var IEXTrading_API_PATH = "https://api.iextrading.com/1.0/stock/{0}/financials";
+
+            IEXTrading_API_PATH = string.Format(IEXTrading_API_PATH, symbol.Symbol1);
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                //For IP-API
+                client.BaseAddress = new Uri(IEXTrading_API_PATH);
+                HttpResponseMessage response = client.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
+                if (response.IsSuccessStatusCode)
+                {
+                    dynamic historicalData = JsonConvert.DeserializeObject<dynamic>(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+
+                    foreach (dynamic s in JsonConvert.DeserializeObject<List<dynamic>>(Convert.ToString(historicalData.financials)))
+                    {
+                        Financial stockF = new Financial();
+                        stockF.Symbol1 = symbol;
+                        stockF.SymbolRef = symbol.SymbolId;
+                        stockF.Symbol = symbol.Symbol1;
+                        stockF.ShareholderEquity = Convert.ToDecimal(s.shareholderEquity);
+                        stockF.ReportDate = Convert.ToDateTime(s.reportDate);
+
+                        symbolFinancial.Add(stockF);
+                    }
+
+
+                    return symbolFinancial;
+                }
+                else if (!(response.IsSuccessStatusCode))
+                {
+                    return symbolFinancial;
+                }
+                return symbolFinancial;
+            }
+        }
+
+
+
+
+        public void AddSymbol()
+        {
+            var IEXTrading_API_PATH = "https://api.iextrading.com/1.0/ref-data/symbols";
+
+            IEXTrading_API_PATH = string.Format(IEXTrading_API_PATH);
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                //For IP-API
+                client.BaseAddress = new Uri(IEXTrading_API_PATH);
+                HttpResponseMessage response = client.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
+                if (response.IsSuccessStatusCode)
+                {
+                    foreach (dynamic historicalData in JsonConvert.DeserializeObject<List<dynamic>>(response.Content.ReadAsStringAsync().GetAwaiter().GetResult()))
+                    {
+                        
+                        Symbol symbolTest = new Symbol();
+                        symbolTest.Symbol1 = Convert.ToString(historicalData.symbol);
+                        symbolTest.SymbolName = Convert.ToString(historicalData.name);
+
+                        db.Symbol.Add(symbolTest);
+                        db.SaveChanges();
+                    
+
+                    }
+
+                }
+            }
+        }
         ///////////////////////////
+        //public ActionResult SignUp()
+        //{
+        //    ViewBag.Message = "Sign up form.";
+
+        //    return View();
+        //}
+
+        //[HttpPost]
+        //public ActionResult SignUp(Profile profile)
+        //{
+        //    return View(profile);
+        //}
+
+        ////public List<Lifestyle> GetLifestyles()
+        ////{
+        ////    List<Lifestyle> lifestylelist = new List<Lifestyle>();
+        ////    lifestylelist = db.Lifestyles.ToList();
+        ////    foreach (Lifestyle l in db.Lifestyles.ToList())
+        ////    {
+
+        ////    }
+        ////    return lifestylelist;
+        ////}
+
+        ////test create record in Profile table
+        ////public ActionResult createProfile()
+        ////{
+        ////    Profile profile = new Profile();
+        ////    profile.userName = "csigety";
+        ////    profile.password = "nothing";
+        ////    profile.gender = "f";
+        ////    profile.firstName = "Colyer";
+        ////    profile.lastName = "Sigety";
+        ////    profile.lifestyle = "binger";
+
+        ////    db.Profiles.Add(profile);
+        ////    db.SaveChanges();
+
+        ////    return View();
+        ////}
+
+        //public ActionResult Login()
+        //{
+        //    Profile profile = new Profile();
+
+        //    return View(profile);
+        //}
+
+
+        //[HttpPost]
+        //public ActionResult Login(Profile profile)
+        //{
+
+        //    return View(profile);
+        //    //when user inputs the 
+        //    //return View("Dashboard");
+        //}
+
     }
 }
 
