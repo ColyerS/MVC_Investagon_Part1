@@ -18,26 +18,25 @@
 
 <body>
     <div class="jumbotron" style="background-color: #9a9a9a">
-        <h1>@ViewBag.Title</h1>
         <div class="well" style="background-color: #d8d7d7">
             @using (Html.BeginForm())
             {
 
                 <div class="form-group centerlook">
-                    <h1> Stock Chart Update </h1>
+                    <h1> Update your stock dashboard </h1>
                 </div>
                 <div class="input-group-lg">
-                    <label>Stock Capture: </label>
+                    <label>Stock Ticker: </label>
                     <br />
                     @*<input type="text" id="SymbolName" placeholder="something">*@
                     @*data-autocomplete="@Url.Action("Search","Home")" autocomplete="on" />*@
                     @Html.EditorFor(model => model.Symbol1, new { @class = "form-control", placeholder = "Symbol" })
                 </div>
                 <p>Please type a stock ticker here.</p>
-                <p>A few ideas: AAPL, COLM, AMZN, HLT, DKS, BA, FB</p>
+                <p>A few ideas! AAPL, COLM, AMZN, DKS, BA, FB</p>
                 <br />
                 <div class="loginbtn">
-                    <input type="submit" value="Update Dash" class="btn btn-primary" />
+                    <input type="submit" value="Update Dash" class="btn btn-success" />
                 </div>
             }
         </div>
